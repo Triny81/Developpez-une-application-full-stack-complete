@@ -3,8 +3,6 @@ package com.openclassrooms.mddapi.dto;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.openclassrooms.mddapi.model.Article;
-import com.openclassrooms.mddapi.model.User;
 
 import lombok.Data;
 
@@ -14,9 +12,9 @@ public class CommentDto {
 
     private String message;
 
-    private User author;
+    private UserDto author;
 
-    private Article article;
+    private ArticleDto article;
 
     @JsonFormat(pattern="yyyy/MM/dd")
     private Date createdAt;

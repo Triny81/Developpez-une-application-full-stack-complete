@@ -41,27 +41,16 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public User saveUser(User user) throws Exception {
-
-        if (user.getEmail() != null) {
-            Optional<User> userOptionnal = userRepository.findByEmail(user.getEmail());
-
-            if (!userOptionnal.isEmpty()) {
-                User userFound = userOptionnal.get();
-
-                if (userFound.getEmail() != null && (user.getId() == null || !user.getId().equals(userFound.getId()))) { // Email must be unique
-                    throw new Exception("Email already exists");
-                }
-
-                if (userFound.getUsername() != null && (user.getId() == null || !user.getId().equals(userFound.getId()))) { // Username must be unique
-                    throw new Exception("Username already exists");
-                }
-            }
+    public User saveUser(User user) { 
+        if (user.getId() == null || !isPasswordEncoded(user.getPassword())) {
+            user.setPassword(ssc.passwordEncoder().encode(user.getPassword()));
         }
-
-        user.setPassword(ssc.passwordEncoder().encode(user.getPassword()));
-
+    
         User savedUser = userRepository.save(user);
         return savedUser;
+    }
+
+    private boolean isPasswordEncoded(String password) {
+        return password != null && password.startsWith("$2");
     }
 }
