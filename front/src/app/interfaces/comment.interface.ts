@@ -3,7 +3,7 @@ import { User } from "./user.interface"
 
 export interface Comment {
     id: number,
-    message: String,
+    message: string,
     author: User,
     article: Article,
     createdAt: Date,

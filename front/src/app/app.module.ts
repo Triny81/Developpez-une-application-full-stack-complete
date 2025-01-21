@@ -7,16 +7,26 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/authentication/login/login.component';
 import { RegisterComponent } from './pages/authentication/register/register.component';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './interceptors/jwt.interceptor';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { HeaderComponent } from './pages/shared/header/header.component';
 
 @NgModule({
-  declarations: [AppComponent, HomeComponent, LoginComponent, RegisterComponent],
+  declarations: [AppComponent, HomeComponent, LoginComponent, RegisterComponent, HeaderComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    ReactiveFormsModule,
     MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    HttpClientModule
   ],
   providers: [
     {

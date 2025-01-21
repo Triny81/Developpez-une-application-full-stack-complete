@@ -1,0 +1,10 @@
+<header class="app-header">
+    <img src="assets/logo_p6.png" alt="MDD logo" class="logo" />
+
+    <div *ngIf="isLoggedIn && showLinks">
+        <nav class="nav-menu">
+            <a routerLink="/articles" routerLinkActive="active">Articles</a>
+            <a routerLink="/themes" routerLinkActive="active">Thèmes</a>
+        </nav>
+    </div>
+</header>

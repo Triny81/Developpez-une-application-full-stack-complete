@@ -1,6 +1,7 @@
 package com.openclassrooms.mddapi.controller;
 
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,11 +45,47 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody SignupRequest signup) throws Exception {
-
         String uncryptedPassoword = signup.getPassword();
+
+        // Regex pour chaque condition
+        String regexDigit = ".*[0-9].*"; // Au moins un chiffre
+        String regexLowercase = ".*[a-z].*"; // Au moins une lettre minuscule
+        String regexUppercase = ".*[A-Z].*"; // Au moins une lettre majuscule
+        String regexSpecialChar = ".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?].*"; // Au moins un caractère spécial
+       
+        // Vérifications    
+        boolean hasDigit = Pattern.matches(regexDigit, uncryptedPassoword);
+        boolean hasLowercase = Pattern.matches(regexLowercase, uncryptedPassoword);
+        boolean hasUppercase = Pattern.matches(regexUppercase, uncryptedPassoword);
+        boolean hasSpecialChar = Pattern.matches(regexSpecialChar, uncryptedPassoword);
+    
+        if (!hasDigit) {
+            return ResponseEntity.badRequest().body("Password must contain at least one number");
+        }
+
+        if (!hasLowercase) {
+            return ResponseEntity.badRequest().body("Password must contain at least one lowercase letter");
+        }
+
+        if (!hasUppercase) {
+            return ResponseEntity.badRequest().body("Password must contain at least one capital letter");
+        }
+
+        if (!hasSpecialChar) {
+            return ResponseEntity.badRequest().body("Password must contain at least one special character");
+        }
+
+        if (!userService.getUserByUsername(signup.getUsername()).isEmpty()) {
+            return ResponseEntity.badRequest().body("Username already taken");
+        }   
+
+        if (!userService.getUserByEmail(signup.getEmail()).isEmpty()) {
+            return ResponseEntity.badRequest().body("Email already taken");
+        } 
+
         User registeredUser = convertSignupRequestToUser(signup);
         registeredUser = userService.saveUser(registeredUser);
-
+    
         if (registeredUser != null) {
             return getTokenJSON(signup.getEmail(), uncryptedPassoword);
         } else {

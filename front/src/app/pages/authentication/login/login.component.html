@@ -1,1 +1,32 @@
-<p>login works!</p>
+<div class="auth-container">
+    <app-header></app-header>
+    <button class="back-button" mat-button routerLink="/"><mat-icon>arrow_back</mat-icon></button>
+
+    <h2>Se connecter</h2>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <p>
+            <mat-form-field appearance="outline" class="form-field">
+                <mat-label>E-mail ou nom d'utilisateur</mat-label>
+                <input matInput id="login" formControlName="login" />
+                <mat-error *ngIf="loginForm.get('login')?.invalid">Champ requis</mat-error>
+            </mat-form-field>
+        </p>
+        <p>
+            <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Mot de passe</mat-label>
+                <input matInput [type]="hide ? 'password' : 'text'" id="password" formControlName="password"
+                    type="password" />
+                <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+                    [attr.aria-pressed]="hide">
+                    <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </button>
+                <mat-error *ngIf="loginForm.get('password')?.invalid">Champ requis</mat-error>
+            </mat-form-field>
+        </p>
+
+        <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">
+            Se connecter
+        </button>
+        <p *ngIf="onError" class="error">{{onError}}</p>
+    </form>
+</div>

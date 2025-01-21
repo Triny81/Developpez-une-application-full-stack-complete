@@ -1,7 +1,7 @@
 export interface Theme {
     id: number,
-    name: String,
-    description: String,
+    name: string,
+    description: string,
     createdAt: Date,
     updatedAt: Date
 }
