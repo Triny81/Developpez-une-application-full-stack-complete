@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.openclassrooms.mddapi.configuration.SpringSecurityConfig;
+import com.openclassrooms.mddapi.model.Theme;
 import com.openclassrooms.mddapi.model.User;
 import com.openclassrooms.mddapi.repository.UserRepository;
 
@@ -48,6 +49,10 @@ public class UserService {
     
         User savedUser = userRepository.save(user);
         return savedUser;
+    }
+
+    public boolean isSubscribedToTheme(User user, Theme theme) {
+        return userRepository.isUserSubscribedToTheme(user.getId(), theme.getId());
     }
 
     private boolean isPasswordEncoded(String password) {

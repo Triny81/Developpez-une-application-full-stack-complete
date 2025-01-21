@@ -3,8 +3,10 @@
 
     <div *ngIf="isLoggedIn && showLinks">
         <nav class="nav-menu">
-            <a routerLink="/articles" routerLinkActive="active">Articles</a>
-            <a routerLink="/themes" routerLinkActive="active">Thèmes</a>
+            <a routerLink="/article" routerLinkActive="active">Articles</a>
+            <a routerLink="/theme" routerLinkActive="active">Thèmes</a>
         </nav>
     </div>
+
+    <button mat-button class="logout-button" *ngIf="isLoggedIn" (click)="logout()">Déconnexion</button>
 </header>

@@ -14,9 +14,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { HeaderComponent } from './pages/shared/header/header.component';
+import { ArticleListComponent } from './pages/article/article-list/article-list.component';
+import { ThemeListComponent } from './pages/theme/theme-list/theme-list.component';
 
 @NgModule({
-  declarations: [AppComponent, HomeComponent, LoginComponent, RegisterComponent, HeaderComponent],
+  declarations: [AppComponent, HomeComponent, LoginComponent, RegisterComponent, HeaderComponent, ArticleListComponent, ThemeListComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

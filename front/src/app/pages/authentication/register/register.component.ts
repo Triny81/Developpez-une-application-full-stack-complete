@@ -42,7 +42,7 @@ export class RegisterComponent implements OnInit {
         
         next: (response) => {
           localStorage.setItem('authToken', response.token);
-          // this.router.navigate(['/theme']);
+          this.router.navigate(['/theme']);
         },
         error: (error) => {
           this.onError = error.error;

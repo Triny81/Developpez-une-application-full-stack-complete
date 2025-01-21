@@ -17,11 +17,11 @@ export class AuthService {
   ) { }
 
   public register(registerRequest: RegisterRequest): Observable<SessionUser> {
-    return this.httpClient.post<SessionUser>(`${this.pathService}/register`, registerRequest);
+    return this.httpClient.post<SessionUser>(this.pathService+"/register", registerRequest);
   }
 
   public login(loginRequest: LoginRequest): Observable<SessionUser> {
-    return this.httpClient.post<SessionUser>(`${this.pathService}/login`, loginRequest);
+    return this.httpClient.post<SessionUser>(this.pathService+"/login", loginRequest);
   }
 
   logout() {

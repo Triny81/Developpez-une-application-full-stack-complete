@@ -1,5 +1,6 @@
 package com.openclassrooms.mddapi.controller;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.openclassrooms.mddapi.dto.ThemeDto;
 import com.openclassrooms.mddapi.model.Theme;
+import com.openclassrooms.mddapi.model.User;
 import com.openclassrooms.mddapi.service.ThemeService;
+import com.openclassrooms.mddapi.service.UserService;
 
 @RestController
 @RequestMapping("/api/themes")
@@ -27,6 +30,9 @@ public class ThemeController {
 
     @Autowired
     private ThemeService themeService;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -81,6 +87,43 @@ public class ThemeController {
     public ResponseEntity<?> deleteTheme(@PathVariable("id") final Long id) {
         themeService.deleteTheme(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("getUserSubscriptions") // get the subscriptions of the current user
+    public ResponseEntity<?> getUserSubscriptions(Principal principal) {
+        Optional<User> optUser = userService.getUserByEmail(principal.getName());
+
+        if (optUser.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        User user = optUser.get();
+        return ResponseEntity.ok(convertIterableToDto(user.getThemes()));
+    }
+
+    @GetMapping("updateSubscription/{themeId}") // subscribe or unsubscribe the current user
+    public ResponseEntity<?> updateSubscription(@PathVariable("themeId") final Long themeId, Principal principal) {
+        Optional<User> optUser = userService.getUserByEmail(principal.getName());
+        Optional<Theme> optTheme = themeService.getTheme(themeId);
+
+        if (optUser.isEmpty() || optTheme.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        User user = optUser.get();
+        Theme theme = optTheme.get();
+
+        boolean isSubscribed = userService.isSubscribedToTheme(user, theme);
+
+        if (isSubscribed) {
+            user.getThemes().remove(theme);
+            userService.saveUser(user);
+            return ResponseEntity.ok("{ \"message\": \"Unsubscribed to the theme " + theme.getName() + "\" }");
+        } else {
+            user.getThemes().add(theme);
+            userService.saveUser(user);
+            return ResponseEntity.ok("{ \"message\": \"Subscribed to the theme " + theme.getName() + "\" }");
+        }
     }
 
     private ThemeDto convertToDto(Theme theme) {
