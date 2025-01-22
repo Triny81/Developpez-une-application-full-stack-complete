@@ -16,9 +16,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { HeaderComponent } from './pages/shared/header/header.component';
 import { ArticleListComponent } from './pages/article/article-list/article-list.component';
 import { ThemeListComponent } from './pages/theme/theme-list/theme-list.component';
+import { NotFoundComponent } from './pages/not-found/not-found.component';
+import { UserProfileComponent } from './pages/authentication/user-profile/user-profile.component';
+import { ArticleFormComponent } from './pages/article/article-form/article-form.component';
+import { MatSelectModule } from '@angular/material/select';
+import { ArticleDetailComponent } from './pages/article/article-detail/article-detail.component';
 
 @NgModule({
-  declarations: [AppComponent, HomeComponent, LoginComponent, RegisterComponent, HeaderComponent, ArticleListComponent, ThemeListComponent],
+  declarations: [AppComponent, HomeComponent, LoginComponent, RegisterComponent, HeaderComponent, ArticleListComponent, ThemeListComponent, NotFoundComponent, UserProfileComponent, ArticleFormComponent, ArticleDetailComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -28,7 +33,9 @@ import { ThemeListComponent } from './pages/theme/theme-list/theme-list.componen
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
-    HttpClientModule
+    HttpClientModule,
+    MatIconModule,
+    MatSelectModule
   ],
   providers: [
     {

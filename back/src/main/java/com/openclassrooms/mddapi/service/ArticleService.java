@@ -43,4 +43,8 @@ public class ArticleService {
     public void deleteArticle(final Long id) {
         articleRepository.deleteById(id);
     }
+
+    public List<Article> getArticlesByUserSubscriptions(Long userId) {
+        return articleRepository.findArticlesByUserSubscriptions(userId);
+    }
 }

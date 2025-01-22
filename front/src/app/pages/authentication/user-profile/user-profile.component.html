@@ -1,0 +1,54 @@
+<app-header></app-header>
+<div class="user-profile-container">
+    <h1>Profil utilisateur</h1>
+
+    <form *ngIf="profileForm" [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+        <div class="profile-form">
+            <p>
+                <mat-form-field appearance="outline" class="form-field">
+                    <mat-label>Nom d'utilisateur</mat-label>
+                    <input matInput formControlName="username" />
+                    <mat-error *ngIf="profileForm.get('username')?.hasError('required')">
+                        Le nom d'utilisateur est requis
+                    </mat-error>
+                    <mat-error *ngIf="profileForm.get('username')?.hasError('minlength')">
+                        Le nom d'utilisateur doit contenir au moins 3 caractères
+                    </mat-error>
+                </mat-form-field>
+            </p>
+
+            <p>
+                <mat-form-field appearance="outline" class="form-field">
+                    <mat-label>Adresse email</mat-label>
+                    <input matInput formControlName="email" />
+                    <mat-error *ngIf="profileForm.get('email')?.hasError('required')">
+                        L'adresse email est requise
+                    </mat-error>
+                    <mat-error *ngIf="profileForm.get('email')?.hasError('email')">
+                        Adresse email invalide
+                    </mat-error>
+                </mat-form-field>
+            </p>
+
+            <button mat-raised-button color="primary" type="submit" [disabled]="!profileForm.valid">
+                Sauvegarder
+            </button>
+            <p *ngIf="onError" class="error">{{onError}}</p>
+
+            <button mat-button color="warn" type="button" (click)="logout()">Se déconnecter</button>
+        </div>
+    </form>
+
+    <hr />
+    <h2>Abonnements</h2>
+
+    <div class="list-container">
+        <div *ngFor="let theme of subscribedThemes" class="card">
+            <h3>{{ theme.name }}</h3>
+            <p>{{ theme.description }}</p>
+            <button mat-raised-button color="primary" (click)="unsubscribe(theme)">
+                Se désabonner
+            </button>
+        </div>
+    </div>
+</div>

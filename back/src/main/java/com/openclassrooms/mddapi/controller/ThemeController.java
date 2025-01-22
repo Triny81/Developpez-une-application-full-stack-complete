@@ -85,8 +85,13 @@ public class ThemeController {
 
     @DeleteMapping("{id}")
     public ResponseEntity<?> deleteTheme(@PathVariable("id") final Long id) {
-        themeService.deleteTheme(id);
-        return ResponseEntity.ok().build();
+        Optional<Theme> theme = themeService.getTheme(id);
+        if (theme.isPresent()) {
+            themeService.deleteTheme(id);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("getUserSubscriptions") // get the subscriptions of the current user

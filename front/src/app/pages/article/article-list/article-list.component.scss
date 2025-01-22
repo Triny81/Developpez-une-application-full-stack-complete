@@ -1,0 +1,20 @@
+.articles-header {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin-top: 20px;
+  
+    .sort-container {
+      display: flex;
+      align-items: center;
+  
+      span {
+        margin-right: 5px;
+        font-size: 14px;
+      }
+  
+      mat-icon {
+        font-size: 18px;
+      }
+    }
+  }

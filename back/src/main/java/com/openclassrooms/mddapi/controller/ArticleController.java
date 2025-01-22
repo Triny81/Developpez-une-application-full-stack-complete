@@ -1,5 +1,6 @@
 package com.openclassrooms.mddapi.controller;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.openclassrooms.mddapi.dto.ArticleDto;
 import com.openclassrooms.mddapi.model.Article;
 import com.openclassrooms.mddapi.model.Theme;
+import com.openclassrooms.mddapi.model.User;
 import com.openclassrooms.mddapi.service.ArticleService;
+import com.openclassrooms.mddapi.service.UserService;
 
 @RestController
 @RequestMapping("/api/articles")
@@ -28,6 +31,9 @@ public class ArticleController {
 
     @Autowired
     private ArticleService articleService;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -85,8 +91,25 @@ public class ArticleController {
 
     @DeleteMapping("{id}")
     public ResponseEntity<?> deleteArticle(@PathVariable("id") final Long id) {
-        articleService.deleteArticle(id);
-        return ResponseEntity.ok().build();
+        Optional<Article> article = articleService.getArticle(id);
+        if (article.isPresent()) {
+            articleService.deleteArticle(id);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("getUserSubscriptions") // get the articles of the subscriptions of the current user
+    public ResponseEntity<?> getUserSubscriptions(Principal principal) {
+        Optional<User> optUser = userService.getUserByEmail(principal.getName());
+
+        if (optUser.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        User user = optUser.get();
+        return ResponseEntity.ok(convertIterableToDto(articleService.getArticlesByUserSubscriptions(user.getId())));
     }
 
     private ArticleDto convertToDto(Article article) {

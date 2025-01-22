@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +53,7 @@ public class UserController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<UserDto> updateUser(@PathVariable("id") final Long id,
+    public ResponseEntity<?> updateUser(@PathVariable("id") final Long id,
             @RequestBody User user) {
         Optional<User> u = userService.getUser(id);
 
@@ -61,17 +62,54 @@ public class UserController {
 
             String email = user.getEmail();
             if (email != null) {
+                if (!email.equals(currentUser.getEmail()) && userService.getUserByEmail(user.getEmail()).isPresent()) {
+                    return ResponseEntity.badRequest().body("Email already taken");
+                }
+
                 currentUser.setEmail(email);
             }
 
             String username = user.getUsername();
             if (username != null) {
+                if (!username.equals(currentUser.getUsername())
+                        && userService.getUserByUsername(user.getUsername()).isPresent()) {
+                    return ResponseEntity.badRequest().body("Username already taken");
+                }
+
                 currentUser.setUsername(username);
             }
 
-            String password = user.getPassword();
-            if (password != null) {
-                currentUser.setPassword(password);
+            String uncryptedPassoword = user.getPassword();
+            if (uncryptedPassoword != null) {
+                // Regex pour chaque condition
+                String regexDigit = ".*[0-9].*"; // Au moins un chiffre
+                String regexLowercase = ".*[a-z].*"; // Au moins une lettre minuscule
+                String regexUppercase = ".*[A-Z].*"; // Au moins une lettre majuscule
+                String regexSpecialChar = ".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?].*"; // Au moins un caractère
+                                                                                              // spécial
+                // Vérifications
+                boolean hasDigit = Pattern.matches(regexDigit, uncryptedPassoword);
+                boolean hasLowercase = Pattern.matches(regexLowercase, uncryptedPassoword);
+                boolean hasUppercase = Pattern.matches(regexUppercase, uncryptedPassoword);
+                boolean hasSpecialChar = Pattern.matches(regexSpecialChar, uncryptedPassoword);
+
+                if (!hasDigit) {
+                    return ResponseEntity.badRequest().body("Password must contain at least one number");
+                }
+
+                if (!hasLowercase) {
+                    return ResponseEntity.badRequest().body("Password must contain at least one lowercase letter");
+                }
+
+                if (!hasUppercase) {
+                    return ResponseEntity.badRequest().body("Password must contain at least one capital letter");
+                }
+
+                if (!hasSpecialChar) {
+                    return ResponseEntity.badRequest().body("Password must contain at least one special character");
+                }
+
+                currentUser.setPassword(uncryptedPassoword);
             }
 
             userService.saveUser(currentUser);
@@ -84,8 +122,13 @@ public class UserController {
 
     @DeleteMapping("{id}")
     public ResponseEntity<?> deleteUser(@PathVariable("id") final Long id) {
-        userService.deleteUser(id);
-        return ResponseEntity.ok().build();
+        Optional<User> user = userService.getUser(id);
+        if (user.isPresent()) {
+            userService.deleteUser(id);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     private UserDto convertToDto(User user) {

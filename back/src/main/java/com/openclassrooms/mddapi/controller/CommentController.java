@@ -81,12 +81,18 @@ public class CommentController {
 
     @DeleteMapping("{id}")
     public ResponseEntity<?> deleteComment(@PathVariable("id") final Long id) {
-        commentService.deleteComment(id);
-        return ResponseEntity.ok().build();
+        Optional<Comment> comment = commentService.getComment(id);
+        if (comment.isPresent()) {
+            commentService.deleteComment(id);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("/article/{articleId}")
-    public ResponseEntity<Map<String, ArrayList<CommentDto>>> getCommentsByArticle(@PathVariable("articleId") Long articleId) {
+    public ResponseEntity<Map<String, ArrayList<CommentDto>>> getCommentsByArticle(
+            @PathVariable("articleId") Long articleId) {
         List<Comment> comments = commentService.getCommentsByArticleId(articleId);
         return ResponseEntity.ok(convertIterableToDto(comments));
     }

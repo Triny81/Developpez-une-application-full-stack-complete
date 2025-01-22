@@ -1,0 +1,53 @@
+<app-header></app-header>
+<div class="article-form-container">
+    <h1>Créer un nouvel article</h1>
+
+    <form *ngIf="articleForm" [formGroup]="articleForm" (ngSubmit)="saveArticle()">
+        <div class="form-group">
+            <p>
+                <mat-form-field appearance="outline" class="form-field">
+                    <mat-label>Choisir un thème</mat-label>
+                    <mat-select formControlName="themeId" required>
+                        <mat-option *ngFor="let theme of themes" [value]="theme.id">
+                            {{ theme.name }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="articleForm.get('themeId')?.hasError('required')">
+                        Le thème est requis.
+                    </mat-error>
+                </mat-form-field>
+            </p>
+
+            <p>
+                <mat-form-field appearance="outline" class="form-field">
+                    <mat-label>Titre de l'article</mat-label>
+                    <input matInput formControlName="title" />
+                    <mat-error *ngIf="articleForm.get('title')?.hasError('required')">
+                        Le titre est requis.
+                    </mat-error>
+                    <mat-error *ngIf="articleForm.get('title')?.hasError('minlength')">
+                        Le titre doit contenir au moins 3 caractères.
+                    </mat-error>
+                </mat-form-field>
+            </p>
+
+            <p>
+                <mat-form-field appearance="outline" class="form-field">
+                    <mat-label>Contenu de l'article</mat-label>
+                    <textarea matInput formControlName="message" rows="5"></textarea>
+                    <mat-error *ngIf="articleForm.get('message')?.hasError('required')">
+                        Le contenu est requis.
+                    </mat-error>
+                    <mat-error *ngIf="articleForm.get('message')?.hasError('minlength')">
+                        Le contenu doit contenir au moins 10 caractères.
+                    </mat-error>
+                </mat-form-field>
+            </p>
+
+            <button mat-raised-button color="primary" type="submit" [disabled]="!articleForm.valid">
+                Créer
+            </button>
+            <p *ngIf="onError" class="error">{{ onError }}</p>
+        </div>
+    </form>
+</div>

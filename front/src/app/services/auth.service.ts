@@ -2,9 +2,10 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { LoginRequest } from '../pages/authentication/interfaces/loginRequest.interface';
-import { RegisterRequest } from '../pages/authentication/interfaces/registerRequest.interface';
+import { LoginRequest } from './interfaces/loginRequest.interface';
+import { RegisterRequest } from './interfaces/registerRequest.interface';
 import { SessionUser } from '../interfaces/sessionUser.interface';
+import { User } from '../interfaces/user.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -24,12 +25,16 @@ export class AuthService {
     return this.httpClient.post<SessionUser>(this.pathService+"/login", loginRequest);
   }
 
-  logout() {
+  public getUserDetails(): Observable<User> {
+    return this.httpClient.get<User>(this.pathService+"/me");
+  }
+
+  public logout() {
     localStorage.removeItem('authToken');
     this.router.navigate(['/']);
   }
 
-  isLoggedIn(): boolean {
+  public isLoggedIn(): boolean {
     return !!localStorage.getItem('authToken');
   }
 }

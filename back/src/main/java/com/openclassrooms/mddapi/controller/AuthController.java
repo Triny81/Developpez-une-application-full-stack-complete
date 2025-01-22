@@ -1,5 +1,6 @@
 package com.openclassrooms.mddapi.controller;
 
+import java.security.Principal;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -10,11 +11,13 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.openclassrooms.mddapi.dto.UserDto;
 import com.openclassrooms.mddapi.model.User;
 import com.openclassrooms.mddapi.payload.request.LoginRequest;
 import com.openclassrooms.mddapi.payload.request.SignupRequest;
@@ -93,6 +96,18 @@ public class AuthController {
         }
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<UserDto> getCurrentUser(Principal principal) {
+        Optional<User> optUser = userService.getUserByEmail(principal.getName());
+        
+        if (optUser.isPresent()) {
+            User user = optUser.get();
+            return ResponseEntity.ok( convertToDto(user));
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     private ResponseEntity<String> getTokenJSON(String login, String encryptedPassword) { // return token in a JSON
         Optional<User> userOptionnal = userService.getUserByEmail(login);
         User user;
@@ -128,4 +143,9 @@ public class AuthController {
 		User user = modelMapper.map(signup, User.class);
 		return user;
 	}
+
+    private UserDto convertToDto(User user) {
+        UserDto userDTO = modelMapper.map(user, UserDto.class);
+        return userDTO;
+    }
 }

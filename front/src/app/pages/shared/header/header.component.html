@@ -8,5 +8,9 @@
         </nav>
     </div>
 
-    <button mat-button class="logout-button" *ngIf="isLoggedIn" (click)="logout()">Déconnexion</button>
+    <div *ngIf="isLoggedIn" class="profile-icon">
+        <button mat-icon-button routerLink="/profile" aria-label="Profile">
+            <mat-icon [ngStyle]="{ color: isProfilePage ? '#6c63ff' : '#787880' }">account_circle</mat-icon>
+        </button>
+    </div>
 </header>
