@@ -1,9 +1,9 @@
-<app-header></app-header>
-<div class="auth-container">    
-    <button class="back-button" mat-button routerLink="/"><mat-icon>arrow_back</mat-icon></button>
+<button class="back-button" mat-button routerLink="/"><mat-icon>arrow_back</mat-icon></button>
 
-    <h2>Se connecter</h2>
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+<div class="auth-container">    
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="center-col">
+        <h1>Se connecter</h1>
+
         <p>
             <mat-form-field appearance="outline" class="form-field">
                 <mat-label>E-mail ou nom d'utilisateur</mat-label>

@@ -1,20 +1,22 @@
-<app-header></app-header>
 <div class="articles-header">
     <button mat-raised-button color="primary" routerLink="/article/form">Créer un article</button>
 
     <div class="sort-container">
-        <span>Trier par</span>
+        <span>Trier par date</span>
         <button mat-icon-button aria-label="Trier par" (click)="sortBy('date')">
-            <mat-icon>arrow_downward</mat-icon>
+            <mat-icon>{{sortDecrease ? 'arrow_downward' : 'arrow_upward' }}</mat-icon>
         </button>
     </div>
 </div>
 
 <div class="list-container">
-    <div *ngFor="let article of articles" class="card">
-        <h3>{{ article.title }}</h3>
-        <p><strong>Date :</strong> {{ article.createdAt | date: 'longDate' }}</p>
-        <p><strong>Auteur :</strong> {{ article.author.username }}</p>
+    <div *ngFor="let article of articles" class="card" (click)="goToDetail(article.id)">
+        <h2>{{ article.title }}</h2>
+        <div class="list-infos">
+            <p><strong>Date :</strong> {{ article.createdAt | date: 'longDate' }}</p>
+            <p><strong>Auteur :</strong> {{ article.author.username }}</p>
+        </div>
+
         <p class="article-message">{{ article.message }}</p>
     </div>
 </div>

@@ -1,0 +1,13 @@
+.article-detail-container {
+    padding-left: 10%;
+    padding-right: 10%;
+}
+
+.article-meta {
+    display: flex;
+    flex-direction: row;
+
+    p {
+        margin-right: 50px;
+    }
+}

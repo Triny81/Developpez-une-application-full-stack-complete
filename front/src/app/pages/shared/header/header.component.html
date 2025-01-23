@@ -1,16 +1,13 @@
-<header class="app-header">
+<header class="app-header" *ngIf="hideHeader === false">
     <img src="assets/logo_p6.png" alt="MDD logo" class="logo" />
 
-    <div *ngIf="isLoggedIn && showLinks">
+    <div *ngIf="isLoggedIn && showLinks" class="profile-icon">
         <nav class="nav-menu">
             <a routerLink="/article" routerLinkActive="active">Articles</a>
             <a routerLink="/theme" routerLinkActive="active">Thèmes</a>
+            <button mat-icon-button routerLink="/profile" aria-label="Profile">
+                <mat-icon [ngStyle]="{ color: isProfilePage ? '#6c63ff' : '#787880' }">account_circle</mat-icon>
+            </button>
         </nav>
-    </div>
-
-    <div *ngIf="isLoggedIn" class="profile-icon">
-        <button mat-icon-button routerLink="/profile" aria-label="Profile">
-            <mat-icon [ngStyle]="{ color: isProfilePage ? '#6c63ff' : '#787880' }">account_circle</mat-icon>
-        </button>
     </div>
 </header>

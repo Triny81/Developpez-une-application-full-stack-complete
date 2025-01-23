@@ -1,1 +1,40 @@
-<p>article-detail works!</p>
+<button class="back-button" mat-icon-button routerLink="/article" aria-label="Retour">
+    <mat-icon>arrow_back</mat-icon>
+</button>
+
+<div *ngIf="article" class="article-detail-container">
+    <h1>{{ article.title }}</h1>
+    <div class="article-meta">
+        <p><strong>Date :</strong> {{ article.createdAt | date: 'longDate' }}</p>
+        <p><strong>Auteur :</strong> {{ article.author.username }}</p>
+        <p><strong>Thème :</strong> {{ article.theme.name }}</p>
+    </div>
+    <p class="article-content">{{ article.message }}</p>
+
+    <hr />
+
+    <h2>Commentaires</h2>
+    <div class="comment-list">
+        <div *ngFor="let comment of comments" class="comment-card">
+            <p class="comment-username">{{ comment.author.username }}</p>
+            <p class="comment-content">{{ comment.message }}</p>
+        </div>
+    </div>
+
+    <form [formGroup]="commentForm" (ngSubmit)="addComment()" class="comment-form">
+        <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Écrivez ici votre commentaire</mat-label>
+            <textarea matInput formControlName="content" rows="3"></textarea>
+            <mat-error *ngIf="commentForm.get('content')?.hasError('required')">
+                Le contenu est requis.
+            </mat-error>
+            <mat-error *ngIf="commentForm.get('content')?.hasError('minlength')">
+                Le commentaire doit contenir au moins 3 caractères.
+            </mat-error>
+        </mat-form-field>
+
+        <button mat-icon-button color="primary" type="submit" [disabled]="!commentForm.valid">
+            <mat-icon>send</mat-icon>
+        </button>
+    </form>
+</div>

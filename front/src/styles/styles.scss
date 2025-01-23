@@ -10,8 +10,41 @@ body {
     font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
+hr {
+    width: 90%;
+}
+
+h1 {
+    font-weight: 400 !important;
+    font-size: 2.5em !important;
+}
+
 .error {
     color: red;
+}
+
+.center-col {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.center-row {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+}
+
+.left-row {
+    width: 100%;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    flex-direction: row;
 }
 
 .list-container {
@@ -26,10 +59,22 @@ body {
     background-color: #f9f9f9;
     border: 1px solid #ddd;
     border-radius: 8px;
-    width: 300px;
+    width: 500px;
     padding: 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    text-align: center;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.list-infos {
+    display: flex;
+    flex-direction: row;
+
+    p {
+        margin-right: 30px;
+    }
 }
 
 .card h3 {
@@ -41,4 +86,10 @@ body {
     color: #555;
     font-size: 14px;
     margin-bottom: 20px;
+}
+
+.back-button {
+    position: relative;
+    top: 35px;
+    left: 15px;
 }

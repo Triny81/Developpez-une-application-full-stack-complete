@@ -46,7 +46,6 @@ export class ArticleFormComponent implements OnInit {
         theme: {id : this.articleForm.value.themeId}
       };
 
-      console.log(articleRequest)
       this.articleService.postArticle(articleRequest).subscribe({
         next: () => {
           this.router.navigate(['/article']);

@@ -1,8 +1,9 @@
-<app-header></app-header>
-<div class="article-form-container">
-    <h1>Créer un nouvel article</h1>
+<button class="back-button" mat-button routerLink="/article"><mat-icon>arrow_back</mat-icon></button>
 
-    <form *ngIf="articleForm" [formGroup]="articleForm" (ngSubmit)="saveArticle()">
+<div class="article-form-container">    
+    <form *ngIf="articleForm" [formGroup]="articleForm" (ngSubmit)="saveArticle()" class="center-col">
+        <h1>Créer un nouvel article</h1>
+
         <div class="form-group">
             <p>
                 <mat-form-field appearance="outline" class="form-field">

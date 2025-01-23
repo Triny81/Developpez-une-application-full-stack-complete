@@ -33,4 +33,10 @@ export class CommentService {
   deleteComment(commentId: number): Observable<void> {
     return this.httpClient.delete<void>(this.pathService + '/' + commentId);
   }
+
+  getCommentsByArticle(articleId: number): Observable<Comment[]> {
+    return this.httpClient.get<{ comments: Comment[] }>(this.pathService + '/article/' + articleId).pipe(
+      map((response) => response.comments.map((comment) => ({ ...comment, subscribed: false })))
+    );
+  }
 }

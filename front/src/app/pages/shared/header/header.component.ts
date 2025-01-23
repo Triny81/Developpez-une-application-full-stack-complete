@@ -9,11 +9,13 @@ import { filter, startWith } from 'rxjs/operators';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
+  hideHeader: boolean = false;
   isLoggedIn: boolean = false;
   showLinks: boolean = true;
   isProfilePage: boolean = false;
-
+  
   constructor(private authService: AuthService, private router: Router) { }
+  
 
   ngOnInit(): void {
     this.isLoggedIn = this.authService.isLoggedIn();
@@ -23,6 +25,8 @@ export class HeaderComponent implements OnInit {
         startWith(this.router))
       .subscribe((event: any) => {
         const currentRoute = event.url;
+
+        this.hideHeader = event.url == "/";
         this.showLinks = !(currentRoute.includes('/login') || currentRoute.includes('/register'));
         this.isProfilePage = event.url === '/profile';
       });

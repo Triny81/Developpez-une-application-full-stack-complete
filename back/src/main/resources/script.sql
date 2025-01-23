@@ -11,7 +11,7 @@ CREATE TABLE `USER` (
 CREATE TABLE `THEME` (
   `id` integer PRIMARY KEY AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
-  `description` text NOT NULL,
+  `description` longtext NOT NULL,
   `created_at` timestamp NOT NULL,
   `updated_at` timestamp NOT NULL
 );
@@ -19,7 +19,7 @@ CREATE TABLE `THEME` (
 CREATE TABLE `ARTICLE` (
   `id` integer PRIMARY KEY AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
-  `message` text NOT NULL,
+  `message` longtext NOT NULL,
   `author_id` integer NOT NULL,
   `theme_id` integer NOT NULL,
   `created_at` timestamp NOT NULL,
@@ -28,7 +28,7 @@ CREATE TABLE `ARTICLE` (
 
 CREATE TABLE `COMMENT` (
   `id` integer PRIMARY KEY AUTO_INCREMENT,
-  `message` text NOT NULL,
+  `message` longtext NOT NULL,
   `author_id` integer NOT NULL,
   `article_id` integer NOT NULL,
   `created_at` timestamp NOT NULL,

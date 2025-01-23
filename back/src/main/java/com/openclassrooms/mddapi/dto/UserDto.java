@@ -1,7 +1,6 @@
 package com.openclassrooms.mddapi.dto;
 
 import java.util.Date;
-import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -16,8 +15,6 @@ public class UserDto {
     private String username;
 
     private boolean admin;
-
-    private List<ThemeDto> themes;
 
     @JsonFormat(pattern="yyyy/MM/dd")
     private Date createdAt;
