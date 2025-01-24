@@ -2,12 +2,32 @@
     <img src="assets/logo_p6.png" alt="MDD logo" class="logo" />
 
     <div *ngIf="isLoggedIn && showLinks" class="profile-icon">
-        <nav class="nav-menu">
+        <nav class="nav-menu-desktop">
+
             <a routerLink="/article" routerLinkActive="active">Articles</a>
             <a routerLink="/theme" routerLinkActive="active">Thèmes</a>
             <button mat-icon-button routerLink="/profile" aria-label="Profile">
                 <mat-icon [ngStyle]="{ color: isProfilePage ? '#6c63ff' : '#787880' }">account_circle</mat-icon>
             </button>
+        </nav>
+
+        <nav class="nav-menu-mobile">
+            <div *ngIf="isMenuOpen" class="overlay" (click)="closeMenu()"></div>
+
+            <button mat-icon-button class="menu-button" (click)="toggleMenu()" aria-label="Toggle menu">
+                <mat-icon>menu</mat-icon>
+            </button>
+
+            <div *ngIf="isMenuOpen" class="mobile-links">
+                <div class="links">
+                    <a routerLink="/article" routerLinkActive="active" (click)="closeMenu()">Articles</a>
+                    <a routerLink="/theme" routerLinkActive="active" (click)="closeMenu()">Thèmes</a>
+                </div>
+
+                <button mat-icon-button routerLink="/profile" aria-label="Profile">
+                    <mat-icon [ngStyle]="{ color: isProfilePage ? '#6c63ff' : '#787880' }">account_circle</mat-icon>
+                </button>
+            </div>
         </nav>
     </div>
 </header>

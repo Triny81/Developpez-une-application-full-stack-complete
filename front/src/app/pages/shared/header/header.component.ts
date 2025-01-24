@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { filter, startWith } from 'rxjs/operators';
@@ -9,14 +9,14 @@ import { filter, startWith } from 'rxjs/operators';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
+  showLinks: boolean = true;
   hideHeader: boolean = false;
   isLoggedIn: boolean = false;
-  showLinks: boolean = true;
   isProfilePage: boolean = false;
+  isMenuOpen: boolean = false;
   
   constructor(private authService: AuthService, private router: Router) { }
   
-
   ngOnInit(): void {
     this.isLoggedIn = this.authService.isLoggedIn();
 
@@ -36,5 +36,21 @@ export class HeaderComponent implements OnInit {
     this.authService.logout();
     this.isLoggedIn = false;
     this.router.navigate(['/login']);
+  }
+
+  toggleMenu(): void {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
+
+  closeMenu(): void {
+    this.isMenuOpen = false;
+  }
+
+  @HostListener('document:click', ['$event.target'])
+  onClick(targetElement: HTMLElement): void {
+    const isInside = targetElement.closest('.nav-menu-mobile');
+    if (!isInside) {
+      this.closeMenu();
+    }
   }
 }

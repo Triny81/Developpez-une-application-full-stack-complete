@@ -35,7 +35,8 @@ import { ArticleDetailComponent } from './pages/article/article-detail/article-d
     MatIconModule,
     HttpClientModule,
     MatIconModule,
-    MatSelectModule
+    MatSelectModule,
+    
   ],
   providers: [
     {

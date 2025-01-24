@@ -14,21 +14,22 @@
     height: 80px;
 }
 
-.nav-menu {
+.nav-menu-desktop,
+.nav-menu-mobile {
     display: flex;
     align-items: center;
     gap: 40px;
     margin-right: 40px;
 }
 
-.nav-menu a {
+.nav-menu-desktop a {
     font-size: 22px;
     text-decoration: none;
     color: #333;
     font-weight: bold;
 }
 
-.nav-menu a.active {
+.nav-menu-desktop a.active {
     color: $violet-app;
 }
 
@@ -38,5 +39,74 @@
             font-size: 45px;
             overflow: visible;
         }
+    }
+}
+
+.mobile-nav {
+    display: none;
+}
+
+.mobile-links {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 60%;
+    height: 50%;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    z-index: 10;
+    align-items: flex-end;
+    border: 1px solid black;
+
+    .links {
+        margin-top: 30px;
+        gap: 10px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    a {
+        text-decoration: none;
+        color: #333;
+        font-weight: bold;
+
+        &.active {
+            color: #6c63ff;
+        }
+    }
+
+    button {
+        margin-bottom: 30px;
+    }
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); // Couleur semi-transparente
+    z-index: 9; // Doit être inférieur à .mobile-links pour apparaître derrière le menu
+  }
+
+
+@media (max-width: 768px) {
+    .nav-menu-desktop {
+        display: none;
+    }
+
+    .nav-menu-mobile {
+        display: block;
+    }
+}
+
+@media (min-width: 769px) {
+    .nav-menu-mobile {
+        display: none;
     }
 }

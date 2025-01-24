@@ -21,7 +21,7 @@
         </div>
     </div>
 
-    <form [formGroup]="commentForm" (ngSubmit)="addComment()" class="comment-form">
+    <form [formGroup]="commentForm" (ngSubmit)="addComment()" class="comment-form center-row">
         <mat-form-field appearance="outline" class="form-field">
             <mat-label>Écrivez ici votre commentaire</mat-label>
             <textarea matInput formControlName="content" rows="3"></textarea>
