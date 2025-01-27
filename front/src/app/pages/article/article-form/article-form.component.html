@@ -1,10 +1,10 @@
-<button class="back-button" mat-button routerLink="/article"><mat-icon>arrow_back</mat-icon></button>
+<div class="article-form-container">
+    <button class="back-button" mat-button routerLink="/article"><mat-icon>arrow_back</mat-icon></button>
 
-<div class="article-form-container">    
     <form *ngIf="articleForm" [formGroup]="articleForm" (ngSubmit)="saveArticle()" class="center-col">
-        <h1>Créer un nouvel article</h1>
+        <h1><strong>Créer un nouvel article</strong></h1>
 
-        <div class="form-group">
+        <div class="form-group center-col">
             <p>
                 <mat-form-field appearance="outline" class="form-field">
                     <mat-label>Choisir un thème</mat-label>

@@ -14,21 +14,22 @@ export class HeaderComponent implements OnInit {
   isLoggedIn: boolean = false;
   isProfilePage: boolean = false;
   isMenuOpen: boolean = false;
-  
-  constructor(private authService: AuthService, private router: Router) { }
-  
-  ngOnInit(): void {
-    this.isLoggedIn = this.authService.isLoggedIn();
 
+  constructor(private authService: AuthService, private router: Router) { }
+
+  ngOnInit(): void {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd),
         startWith(this.router))
-      .subscribe((event: any) => {
-        const currentRoute = event.url;
+      .subscribe((event) => {
+        if (event instanceof NavigationEnd) {
+          this.isLoggedIn = this.authService.isLoggedIn();
 
-        this.hideHeader = event.url == "/";
-        this.showLinks = !(currentRoute.includes('/login') || currentRoute.includes('/register'));
-        this.isProfilePage = event.url === '/profile';
+          const currentRoute = event.url;
+          this.hideHeader = currentRoute == "/";
+          this.showLinks = !(currentRoute.includes('/login') || currentRoute.includes('/register'));
+          this.isProfilePage = currentRoute === '/profile';
+        }
       });
   }
 

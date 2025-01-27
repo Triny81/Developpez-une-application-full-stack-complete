@@ -1,6 +1,6 @@
-.article-detail-container {
-    padding-left: 20%;
-    padding-right: 20%;
+.article-detail-container-2 {
+    padding-left: 15%;
+    padding-right: 15%;
 }
 
 .article-meta {
@@ -41,7 +41,32 @@
     }
 }
 
-
-h1, h2, div, .article-meta, .article-content {
+h1,
+h2,
+div,
+.article-meta,
+.article-content {
     margin-bottom: 20px;
 }
+
+@media (max-width: 425px) {
+    .comment-list {
+        .comment-card {
+            display: flex;
+            flex-direction: row-reverse;
+            align-items: flex-end;
+
+            .comment-username {
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+            }
+
+            .comment-content {
+                background-color: white;
+            }
+        }
+    }
+}
+
+@media (min-width: 426px) {}
