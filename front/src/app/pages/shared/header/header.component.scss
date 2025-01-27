@@ -65,7 +65,7 @@
 
     .links {
         margin-top: 30px;
-        gap: 10px;
+        gap: 20px;
         display: flex;
         flex-direction: column;
     }
@@ -95,6 +95,13 @@
     z-index: 9;
 }
 
+.mat-button-ripple.mat-ripple:not(:empty) {
+    display: none !important;
+}
+
+.links {
+    font-size: 20px;
+}
 
 @media (max-width: 768px) {
     .nav-menu-desktop {
@@ -110,8 +117,4 @@
     .nav-menu-mobile {
         display: none;
     }
-}
-
-.mat-button-ripple.mat-ripple:not(:empty) {
-    display: none !important;
 }

@@ -10,16 +10,16 @@ import { RegisterRequest } from '../../../services/interfaces/registerRequest.in
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent implements OnInit {
-  public hide: boolean = true;
-  public onError!: String;
+  hide: boolean = true;
+  onError!: string;
 
-  public registerRequest: RegisterRequest = {
+  registerRequest: RegisterRequest = {
     email: '',
     username: '',
     password: ''
   }
 
-  public registerForm: FormGroup = this.fb.group({
+  registerForm: FormGroup = this.fb.group({
     email: [this.registerRequest.email , [Validators.required, Validators.email]],
     username: [this.registerRequest.username , Validators.required],
     password: [this.registerRequest.password , Validators.required],

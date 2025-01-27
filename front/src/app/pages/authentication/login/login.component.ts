@@ -10,15 +10,15 @@ import { LoginRequest } from '../../../services/interfaces/loginRequest.interfac
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  public hide: boolean = true;
-  public onError!: String;
+  hide: boolean = true;
+  onError!: string;
 
-  public loginRequest: LoginRequest = {
+  loginRequest: LoginRequest = {
     login: '',
     password: ''
   };
 
-  public loginForm: FormGroup = this.fb.group({
+  loginForm: FormGroup = this.fb.group({
     login: [this.loginRequest.login, Validators.required],
     password: [this.loginRequest.password, Validators.required]
   });

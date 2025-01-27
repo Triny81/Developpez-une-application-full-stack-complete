@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { Theme } from 'src/app/interfaces/theme.interface';
 import { User } from 'src/app/interfaces/user.interface';
 import { AuthService } from 'src/app/services/auth.service';
@@ -14,17 +13,17 @@ import { UserService } from 'src/app/services/user.service';
   styleUrls: ['./user-profile.component.scss']
 })
 export class UserProfileComponent implements OnInit {
+  hide: boolean = true;
   profileForm!: FormGroup;
   subscribedThemes: Theme[] = [];
   user!: User;
-  onError!: String;
+  onError!: string;
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
     private themeService: ThemeService,
-    private userService: UserService,
-    private router: Router
+    private userService: UserService
   ) { }
 
   ngOnInit(): void {
@@ -41,14 +40,20 @@ export class UserProfileComponent implements OnInit {
 
   saveProfile(): void {
     if (this.profileForm.valid) {
-      const userRequest: UserRequest = {
+      let userRequest: UserRequest = {
         username: this.profileForm.value.username,
-        email: this.profileForm.value.email
+        email: this.profileForm.value.email,
       };
+
+      const password = this.profileForm.value.password;
+      if (password != "") {
+        userRequest.password = password;
+      }
 
       this.userService.putUser(this.user.id, userRequest).subscribe({
         next: (user) => {
           this.setForm(user);
+          this.onError = "";
         },
         error: (error) => {
           this.onError = error.error;
@@ -65,6 +70,7 @@ export class UserProfileComponent implements OnInit {
     this.profileForm = this.fb.group({
       username: [this.user.username, [Validators.required, Validators.minLength(3)]],
       email: [this.user.email, [Validators.required, Validators.email]],
+      password: [""],
     });
   }
 

@@ -24,7 +24,7 @@
                     <a routerLink="/theme" routerLinkActive="active" (click)="closeMenu()">Thèmes</a>
                 </div>
 
-                <button mat-icon-button routerLink="/profile" aria-label="Profile">
+                <button mat-icon-button routerLink="/profile" aria-label="Profile" (click)="closeMenu()">
                     <mat-icon [ngStyle]="{ color: isProfilePage ? '#6c63ff' : '#787880' }">account_circle</mat-icon>
                 </button>
             </div>
