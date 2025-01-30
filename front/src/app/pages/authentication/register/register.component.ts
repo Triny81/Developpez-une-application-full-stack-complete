@@ -41,7 +41,6 @@ export class RegisterComponent implements OnInit {
       this.authService.register(this.registerRequest).subscribe({
         
         next: (response) => {
-          localStorage.setItem('authToken', response.token);
           this.router.navigate(['/theme']);
         },
         error: (error) => {

@@ -25,3 +25,10 @@
   cursor: pointer;
   background-color: rgb(240, 240, 240);
 }
+
+@media (max-width: 425px) {
+  .articles-header {
+    flex-direction: column;
+    gap: 20px;
+  }
+}

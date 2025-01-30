@@ -40,10 +40,10 @@ export class LoginComponent implements OnInit {
       this.authService.login(this.loginRequest).subscribe({
         
         next: (response) => {
-          localStorage.setItem('authToken', response.token);
           this.router.navigate(['/theme']);
         },
         error: (error) => {
+          console.log(error)
           this.onError = error.error;
         },
       });

@@ -11,7 +11,6 @@ import { filter, startWith } from 'rxjs/operators';
 export class HeaderComponent implements OnInit {
   showLinks: boolean = true;
   hideHeader: boolean = false;
-  isLoggedIn: boolean = false;
   isProfilePage: boolean = false;
   isMenuOpen: boolean = false;
 
@@ -23,7 +22,6 @@ export class HeaderComponent implements OnInit {
         startWith(this.router))
       .subscribe((event) => {
         if (event instanceof NavigationEnd) {
-          this.isLoggedIn = this.authService.isLoggedIn();
 
           const currentRoute = event.url;
           this.hideHeader = currentRoute == "/";
@@ -35,8 +33,7 @@ export class HeaderComponent implements OnInit {
 
   logout(): void {
     this.authService.logout();
-    this.isLoggedIn = false;
-    this.router.navigate(['/login']);
+    this.router.navigate(['/']);
   }
 
   toggleMenu(): void {

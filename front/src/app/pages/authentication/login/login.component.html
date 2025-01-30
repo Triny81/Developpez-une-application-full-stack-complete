@@ -7,7 +7,7 @@
         <p>
             <mat-form-field appearance="outline" class="form-field">
                 <mat-label>E-mail ou nom d'utilisateur</mat-label>
-                <input matInput id="login" formControlName="login" />
+                <input matInput id="login" formControlName="login" autocomplete="login" />
                 <mat-error *ngIf="loginForm.get('login')?.invalid">Champ requis</mat-error>
             </mat-form-field>
         </p>
@@ -15,7 +15,7 @@
             <mat-form-field appearance="outline" class="form-field">
                 <mat-label>Mot de passe</mat-label>
                 <input matInput [type]="hide ? 'password' : 'text'" id="password" formControlName="password"
-                    type="password" />
+                    type="password" autocomplete="password" />
                 <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
                     [attr.aria-pressed]="hide">
                     <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>

@@ -1,22 +1,20 @@
-
-
 <div class="auth-container">
     <button class="back-button" mat-button routerLink="/"><mat-icon>arrow_back</mat-icon></button>
-    
+
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="center-col">
         <h1>Inscription</h1>
 
         <p>
             <mat-form-field appearance="outline" class="form-field">
                 <mat-label>Nom d'utilisateur</mat-label>
-                <input matInput id="username" formControlName="username" />
+                <input matInput id="username" formControlName="username" autocomplete="username" />
                 <mat-error *ngIf="registerForm.get('username')?.invalid">Champ requis</mat-error>
             </mat-form-field>
         </p>
         <p>
             <mat-form-field appearance="outline" class="form-field">
                 <mat-label>Adresse e-mail</mat-label>
-                <input matInput id="email" formControlName="email" type="email" />
+                <input matInput id="email" formControlName="email" type="email" autocomplete="email" />
                 <mat-error *ngIf="registerForm.get('email')?.invalid">E-mail invalide</mat-error>
             </mat-form-field>
         </p>
@@ -24,7 +22,7 @@
             <mat-form-field appearance="outline" class="form-field">
                 <mat-label>Mot de passe</mat-label>
                 <input matInput [type]="hide ? 'password' : 'text'" id="password" formControlName="password"
-                    type="password" />
+                    type="password" autocomplete="password" />
                 <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
                     [attr.aria-pressed]="hide">
                     <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>

@@ -1,7 +1,7 @@
 <header class="app-header" *ngIf="hideHeader === false">
     <img src="assets/logo_p6.png" alt="MDD logo" class="logo" />
 
-    <div *ngIf="isLoggedIn && showLinks" class="profile-icon">
+    <div *ngIf="showLinks" class="profile-icon">
         <nav class="nav-menu-desktop">
 
             <a routerLink="/article" routerLinkActive="active">Articles</a>

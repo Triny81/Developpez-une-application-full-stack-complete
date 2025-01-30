@@ -1,11 +1,16 @@
 package com.openclassrooms.mddapi.controller;
 
 import java.security.Principal;
+import java.time.Duration;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -42,26 +47,40 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequest login) {
-        return getTokenJSON(login.getLogin(), login.getPassword());
+    public ResponseEntity<?> login(@RequestBody LoginRequest login, HttpServletResponse response) {
+        return authenticateUserAndSetCookie(login.getLogin(), login.getPassword(), response);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(HttpServletResponse response) {
+        ResponseCookie deleteCookie = ResponseCookie.from("jwt", "")
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("Strict")
+                .path("/")
+                .maxAge(0)
+                .build();
+
+        response.addHeader(HttpHeaders.SET_COOKIE, deleteCookie.toString());
+        return ResponseEntity.ok("Logged out successfully");
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody SignupRequest signup) throws Exception {
-        String uncryptedPassoword = signup.getPassword();
+    public ResponseEntity<?> register(@RequestBody SignupRequest signup, HttpServletResponse response) throws Exception {
+        String uncryptedPassword = signup.getPassword();
 
         // Regex pour chaque condition
         String regexDigit = ".*[0-9].*"; // Au moins un chiffre
         String regexLowercase = ".*[a-z].*"; // Au moins une lettre minuscule
         String regexUppercase = ".*[A-Z].*"; // Au moins une lettre majuscule
         String regexSpecialChar = ".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?].*"; // Au moins un caractère spécial
-       
-        // Vérifications    
-        boolean hasDigit = Pattern.matches(regexDigit, uncryptedPassoword);
-        boolean hasLowercase = Pattern.matches(regexLowercase, uncryptedPassoword);
-        boolean hasUppercase = Pattern.matches(regexUppercase, uncryptedPassoword);
-        boolean hasSpecialChar = Pattern.matches(regexSpecialChar, uncryptedPassoword);
-    
+
+        // Vérifications
+        boolean hasDigit = Pattern.matches(regexDigit, uncryptedPassword);
+        boolean hasLowercase = Pattern.matches(regexLowercase, uncryptedPassword);
+        boolean hasUppercase = Pattern.matches(regexUppercase, uncryptedPassword);
+        boolean hasSpecialChar = Pattern.matches(regexSpecialChar, uncryptedPassword);
+
         if (!hasDigit) {
             return ResponseEntity.badRequest().body("Password must contain at least one number");
         }
@@ -80,17 +99,17 @@ public class AuthController {
 
         if (!userService.getUserByUsername(signup.getUsername()).isEmpty()) {
             return ResponseEntity.badRequest().body("Username already taken");
-        }   
+        }
 
         if (!userService.getUserByEmail(signup.getEmail()).isEmpty()) {
             return ResponseEntity.badRequest().body("Email already taken");
-        } 
+        }
 
         User registeredUser = convertSignupRequestToUser(signup);
         registeredUser = userService.saveUser(registeredUser);
-    
+
         if (registeredUser != null) {
-            return getTokenJSON(signup.getEmail(), uncryptedPassoword);
+            return authenticateUserAndSetCookie(signup.getEmail(), uncryptedPassword, response);
         } else {
             return ResponseEntity.badRequest().body("Registration failed");
         }
@@ -99,50 +118,49 @@ public class AuthController {
     @GetMapping("/me")
     public ResponseEntity<UserDto> getCurrentUser(Principal principal) {
         Optional<User> optUser = userService.getUserByEmail(principal.getName());
-        
+
         if (optUser.isPresent()) {
             User user = optUser.get();
-            return ResponseEntity.ok( convertToDto(user));
+            return ResponseEntity.ok(convertToDto(user));
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
-    private ResponseEntity<String> getTokenJSON(String login, String encryptedPassword) { // return token in a JSON
-        Optional<User> userOptionnal = userService.getUserByEmail(login);
-        User user;
+    private ResponseEntity<?> authenticateUserAndSetCookie(String login, String password, HttpServletResponse response) {
+        Optional<User> userOptional = userService.getUserByEmail(login);
+        User user = userOptional.orElseGet(() -> userService.getUserByUsername(login).orElse(null));
 
-        if (userOptionnal.isEmpty()) { // try with username if email not found
-            userOptionnal = userService.getUserByUsername(login);
-
-            if (userOptionnal.isEmpty()) {
-                return ResponseEntity.badRequest().body("Bad credentials");
-            } else {
-                user = userOptionnal.get();
-            }
-
-        } else {
-            user = userOptionnal.get();
+        if (user == null) {
+            return ResponseEntity.badRequest().body("Bad credentials");
         }
 
         try {
             Authentication authentication = authenticationManager
-                    .authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), encryptedPassword));
+                    .authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), password));
             String token = jwtService.generateToken(authentication);
 
-            return ResponseEntity.ok("{ \"token\": \"" + token + "\" }");
+            ResponseCookie jwtCookie = ResponseCookie.from("jwt", token)
+                    .httpOnly(true)
+                    .secure(true) 
+                    .sameSite("Strict")
+                    .path("/")
+                    .maxAge(Duration.ofHours(24))
+                    .build();
 
-        } catch (BadCredentialsException e) { // email / username not found
-            return ResponseEntity.badRequest().body("Bad credentials");
-        } catch (Exception e) { // error password
+            response.addHeader(HttpHeaders.SET_COOKIE, jwtCookie.toString());
+
+            return ResponseEntity.ok(convertToDto(user));
+
+        } catch (BadCredentialsException e) {
             return ResponseEntity.badRequest().body("Bad credentials");
         }
     }
 
     private User convertSignupRequestToUser(SignupRequest signup) {
-		User user = modelMapper.map(signup, User.class);
-		return user;
-	}
+        User user = modelMapper.map(signup, User.class);
+        return user;
+    }
 
     private UserDto convertToDto(User user) {
         UserDto userDTO = modelMapper.map(user, UserDto.class);
