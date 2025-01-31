@@ -43,7 +43,6 @@ export class LoginComponent implements OnInit {
           this.router.navigate(['/theme']);
         },
         error: (error) => {
-          console.log(error)
           this.onError = error.error;
         },
       });

@@ -36,16 +36,15 @@ export class AuthService {
   }
 
   public logout(): void {
-    this.httpClient.post<string>(this.pathService + "/logout", null)
+    this.httpClient.post(this.pathService + "/logout", {}, { responseType: 'text' })
       .subscribe(() => {
         this.isAuthenticated.next(false);
+        this.router.navigate(['/']);
       });
-
-    this.router.navigate(['/']);
   }
 
   public isUserAuthenticated(): Observable<boolean> {
-    return this.httpClient.get('/api/auth/me').pipe(
+    return this.httpClient.get(this.pathService + "/me").pipe(
       map(response => !!response),
       catchError(() => of(false))
     );
@@ -53,8 +52,8 @@ export class AuthService {
 
   private checkAuthentication(): void {
     this.getUserDetails().subscribe({
-      next: (response) => { this.isAuthenticated.next(true), console.log("response", response) },
-      error: (err) => { this.isAuthenticated.next(false), console.log("err", err) },
+      next: (response) => { this.isAuthenticated.next(true) },
+      error: (err) => { this.isAuthenticated.next(false) },
     });
   }
 }
