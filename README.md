@@ -1,25 +1,19 @@
 # P6-Full-Stack-reseau-dev
 
-## Front
+## Base de données et Back-end
+1. Dans Mysql, créer une nouvelle base de données nommée "ocprojet6".
+2. Dans Mysql, exécuter le fichier SQL suivant pour créer les tables et les données en même temps : "back\src\main\resources\script.sql"
+3. Lancer l'application Java.
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.1.3.
+## Front-end
+1. Se rendre dans le répertoire "front".
+2. Lancer la commande "npm install" pour installer les dépendances.
+3. Lancer la commande "ng serve" pour lancer l'application et se rendre à l'url donnée par le terminal (par défaut: localhost:4200).
 
-Don't forget to install your node_modules before starting (`npm install`).
+## Swagger pour l'API
+Lien : http://localhost:3001/swagger-ui/index.html
+Avant d'utiliser toutes les routes, vous devez vous identifier avec la route "/api/auth/login" grâce à vos identifiants habituels.
 
-### Development server
-
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
-
-### Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-### Where to start
-
-As you may have seen if you already started the app, a simple home page containing a logo, a title and a button is available. If you take a look at its code (in the `home.component.html`) you will see that an external UI library is already configured in the project.
-
-This library is `@angular/material`, it's one of the most famous in the angular ecosystem. As you can see on their docs (https://material.angular.io/), it contains a lot of highly customizable components that will help you design your interfaces quickly.
-
-Note: I recommend to use material however it's not mandatory, if you prefer you can get ride of it.
-
-Good luck!
+## Identifiants déjà existants
+Login : "admin" ou "admin@admin.com"
+Mot de passe : "Test123!"

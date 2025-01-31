@@ -48,3 +48,9 @@ ALTER TABLE `COMMENT` ADD FOREIGN KEY (`article_id`) REFERENCES `ARTICLE` (`id`)
 
 ALTER TABLE `SUBSCRIBE` ADD FOREIGN KEY (`user_id`) REFERENCES `USER` (`id`);
 ALTER TABLE `SUBSCRIBE` ADD FOREIGN KEY (`theme_id`) REFERENCES `THEME` (`id`);
+
+INSERT INTO `user` (`id`,`admin`,`created_at`,`email`,`password`,`updated_at`,`username`) VALUES (1,true,'2025-01-17 16:51:39.319000','admin@admin.com','$2a$10$KnXBfkEkt/yTfOlR2poiz.KDtk2MyGf4iR8n7YDlhUAJI1mhzOZ/m','2025-01-31 15:14:55.288000','admin');
+
+INSERT INTO `theme` (`id`,`created_at`,`description`,`name`,`updated_at`) VALUES (1,'2025-01-20 09:50:54.729000','Java est un langage orienté objet, polyvalent et portable grâce à la JVM. Utilisé pour des applications web, mobiles et entreprises, il offre une vaste bibliothèque et une grande communauté, favorisant le développement rapide.','Java','2025-01-20 09:50:54.729000');
+INSERT INTO `theme` (`id`,`created_at`,`description`,`name`,`updated_at`) VALUES (2,'2025-01-20 09:51:06.528000','Thème sur la programmation PHP','PHP','2025-01-20 09:51:06.528000');
+INSERT INTO `theme` (`id`,`created_at`,`description`,`name`,`updated_at`) VALUES (3,'2025-01-20 09:51:13.192000','Thème sur la programmation C#','C#','2025-01-20 09:52:11.870000');

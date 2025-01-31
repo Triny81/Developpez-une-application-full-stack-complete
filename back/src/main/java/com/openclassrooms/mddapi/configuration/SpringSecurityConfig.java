@@ -38,7 +38,7 @@ public class SpringSecurityConfig {
 				.csrf(csrf -> csrf.disable())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(auth -> auth
-						.antMatchers("/api/auth/login", "/api/auth/register", "/api/auth/swagger-login", "/swagger-ui/**", "/api-docs/**").permitAll()
+						.antMatchers("/api/auth/login", "/api/auth/register", "/swagger-ui/**", "/api-docs/**").permitAll()
 						.antMatchers("/api/**").hasAuthority("ROLE_USER")
 						.anyRequest().authenticated())
 				.addFilterBefore(jwtCookieFilter, UsernamePasswordAuthenticationFilter.class) 																			

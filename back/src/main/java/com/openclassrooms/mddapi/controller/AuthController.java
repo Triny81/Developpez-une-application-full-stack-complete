@@ -128,24 +128,6 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/swagger-login")
-    public ResponseEntity<?> swaggerLogin(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getLogin(), loginRequest.getPassword()));
-
-        String token = jwtService.generateToken(authentication);
-
-        ResponseCookie jwtCookie = ResponseCookie.from("jwt", token)
-                .httpOnly(true)
-                .secure(false)
-                .path("/")
-                .maxAge(24 * 60 * 60)
-                .build();
-
-        response.addHeader(HttpHeaders.SET_COOKIE, jwtCookie.toString());
-        return ResponseEntity.ok().body("Login successful");
-    }
-
     private ResponseEntity<?> authenticateUserAndSetCookie(String login, String password,
             HttpServletResponse response) {
         Optional<User> userOptional = userService.getUserByEmail(login);
