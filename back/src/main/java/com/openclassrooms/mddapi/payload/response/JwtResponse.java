@@ -12,7 +12,6 @@ public class JwtResponse {
   private String username;
   private String firstName;
   private String lastName;
-
   private Boolean admin;
 
   public JwtResponse(String accessToken, Long id, String username, String firstName, String lastName, Boolean admin) {

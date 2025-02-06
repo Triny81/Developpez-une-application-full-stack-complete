@@ -3,7 +3,6 @@ package com.openclassrooms.mddapi.service;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.openclassrooms.mddapi.configuration.SpringSecurityConfig;
@@ -12,15 +11,14 @@ import com.openclassrooms.mddapi.model.User;
 import com.openclassrooms.mddapi.repository.UserRepository;
 
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 @Data
+@RequiredArgsConstructor
 @Service
 public class UserService {
-    @Autowired
-    private SpringSecurityConfig ssc;
-
-    @Autowired
-    private UserRepository userRepository;
+    private final SpringSecurityConfig ssc;
+    private final UserRepository userRepository;
 
     public Optional<User> getUser(final Long id) {
         return userRepository.findById(id);
@@ -51,7 +49,7 @@ public class UserService {
         return savedUser;
     }
 
-    public boolean isSubscribedToTheme(User user, Theme theme) {
+    public boolean isSubscribedToTheme(final User user, final Theme theme) {
         return userRepository.isUserSubscribedToTheme(user.getId(), theme.getId());
     }
 

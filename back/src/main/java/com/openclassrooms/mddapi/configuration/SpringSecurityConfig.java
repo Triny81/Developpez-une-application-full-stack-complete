@@ -1,7 +1,5 @@
 package com.openclassrooms.mddapi.configuration;
 
-import com.openclassrooms.mddapi.service.JWTService;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,25 +21,20 @@ import java.util.List;
 @Configuration
 public class SpringSecurityConfig {
 
-	@SuppressWarnings("unused")
-	private final JWTService jwtService;
-
-	public SpringSecurityConfig(JWTService jwtService) {
-		this.jwtService = jwtService;
-	}
-
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtCookieFilter jwtCookieFilter)
 			throws Exception {
+
 		return http
 				.cors(cors -> cors.configurationSource(corsConfigurationSource()))
 				.csrf(csrf -> csrf.disable())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(auth -> auth
-						.antMatchers("/api/auth/login", "/api/auth/register", "/swagger-ui/**", "/api-docs/**").permitAll()
+						.antMatchers("/api/auth/login", "/api/auth/register", "/swagger-ui/**", "/api-docs/**")
+						.permitAll()
 						.antMatchers("/api/**").hasAuthority("ROLE_USER")
 						.anyRequest().authenticated())
-				.addFilterBefore(jwtCookieFilter, UsernamePasswordAuthenticationFilter.class) 																			
+				.addFilterBefore(jwtCookieFilter, UsernamePasswordAuthenticationFilter.class)
 				.build();
 	}
 

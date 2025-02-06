@@ -40,25 +40,29 @@ public class JwtCookieFilter extends OncePerRequestFilter {
                     .filter(cookie -> "jwt".equals(cookie.getName()))
                     .findFirst()
                     .ifPresent(cookie -> {
-                        try {
-                            String token = cookie.getValue();
-
-                            List<String> roles = jwtService.extractRoles(token);
-
-                            List<SimpleGrantedAuthority> authorities = roles.stream()
-                                    .map(SimpleGrantedAuthority::new)
-                                    .collect(Collectors.toList());
-
-                            Jwt jwt = jwtService.decodeToken(token);
-
-                            Authentication auth = new JwtAuthenticationToken(jwt, authorities);
-                            SecurityContextHolder.getContext().setAuthentication(auth);
-                        } catch (Exception e) {
-                        }
+                        setAuthentication(cookie);
                     });
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    private void setAuthentication (final Cookie cookie) {
+        try {
+            String token = cookie.getValue();
+
+            List<String> roles = jwtService.extractRoles(token);
+
+            List<SimpleGrantedAuthority> authorities = roles.stream()
+                    .map(SimpleGrantedAuthority::new)
+                    .collect(Collectors.toList());
+
+            Jwt jwt = jwtService.decodeToken(token);
+
+            Authentication auth = new JwtAuthenticationToken(jwt, authorities);
+            SecurityContextHolder.getContext().setAuthentication(auth);
+        } catch (Exception e) {
+        }
     }
 }
 

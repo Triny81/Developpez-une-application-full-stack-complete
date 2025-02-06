@@ -7,7 +7,6 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,15 +21,14 @@ import com.openclassrooms.mddapi.dto.UserDto;
 import com.openclassrooms.mddapi.model.User;
 import com.openclassrooms.mddapi.service.UserService;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/users")
 public class UserController {
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private ModelMapper modelMapper;
+    private final UserService userService;
+    private final ModelMapper modelMapper;
 
     @GetMapping("{id}")
     public ResponseEntity<UserDto> getUser(@PathVariable("id") final Long id) {

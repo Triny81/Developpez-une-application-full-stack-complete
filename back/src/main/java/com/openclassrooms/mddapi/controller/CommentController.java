@@ -1,5 +1,6 @@
 package com.openclassrooms.mddapi.controller;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,7 +8,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,17 +21,19 @@ import org.springframework.web.bind.annotation.RestController;
 import com.openclassrooms.mddapi.dto.CommentDto;
 import com.openclassrooms.mddapi.model.Article;
 import com.openclassrooms.mddapi.model.Comment;
+import com.openclassrooms.mddapi.model.User;
 import com.openclassrooms.mddapi.service.CommentService;
+import com.openclassrooms.mddapi.service.UserService;
+
+import lombok.RequiredArgsConstructor;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/comments")
 public class CommentController {
-
-    @Autowired
-    private CommentService commentService;
-
-    @Autowired
-    private ModelMapper modelMapper;
+    private final CommentService commentService;
+    private final UserService userService;
+    private final ModelMapper modelMapper;
 
     @GetMapping("{id}")
     public ResponseEntity<CommentDto> getComment(@PathVariable("id") final Long id) {
@@ -49,17 +51,20 @@ public class CommentController {
     }
 
     @PostMapping()
-    public ResponseEntity<CommentDto> createComment(@RequestBody Comment comment) {
-        return ResponseEntity.ok(convertToDto(commentService.saveComment(comment)));
+    public ResponseEntity<CommentDto> createComment(@RequestBody final Comment comment, final Principal principal) {
+        User user = userService.getUserByEmail(principal.getName()).get();
+        return ResponseEntity.ok(convertToDto(commentService.saveComment(comment, user)));
     }
 
     @PutMapping("{id}")
     public ResponseEntity<CommentDto> updateComment(@PathVariable("id") final Long id,
-            @RequestBody Comment comment) {
-        Optional<Comment> u = commentService.getComment(id);
+            @RequestBody final Comment comment, final Principal principal) {
+        Optional<Comment> c = commentService.getComment(id);
 
-        if (u.isPresent()) {
-            Comment currentComment = u.get();
+        if (c.isPresent()) {
+            User user = userService.getUserByEmail(principal.getName()).get();
+
+            Comment currentComment = c.get();
 
             String message = comment.getMessage();
             if (message != null) {
@@ -71,7 +76,7 @@ public class CommentController {
                 currentComment.setArticle(article);
             }
 
-            commentService.saveComment(currentComment);
+            commentService.saveComment(currentComment, user);
 
             return ResponseEntity.ok(convertToDto(currentComment));
         } else {
@@ -92,7 +97,7 @@ public class CommentController {
 
     @GetMapping("/article/{articleId}")
     public ResponseEntity<Map<String, ArrayList<CommentDto>>> getCommentsByArticle(
-            @PathVariable("articleId") Long articleId) {
+            @PathVariable("articleId") final Long articleId) {
         List<Comment> comments = commentService.getCommentsByArticleId(articleId);
         return ResponseEntity.ok(convertIterableToDto(comments));
     }

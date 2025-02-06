@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,18 +23,15 @@ import com.openclassrooms.mddapi.model.User;
 import com.openclassrooms.mddapi.service.ThemeService;
 import com.openclassrooms.mddapi.service.UserService;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/themes")
 public class ThemeController {
-
-    @Autowired
-    private ThemeService themeService;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private ModelMapper modelMapper;
+    private final ThemeService themeService;
+    private final UserService userService;
+    private final ModelMapper modelMapper;
 
     @GetMapping("{id}")
     public ResponseEntity<ThemeDto> getTheme(@PathVariable("id") final Long id) {
@@ -53,17 +49,17 @@ public class ThemeController {
     }
 
     @PostMapping()
-    public ResponseEntity<ThemeDto> createTheme(@RequestBody Theme theme) {
+    public ResponseEntity<ThemeDto> createTheme(@RequestBody final Theme theme) {
         return ResponseEntity.ok(convertToDto(themeService.saveTheme(theme)));
     }
 
     @PutMapping("{id}")
     public ResponseEntity<ThemeDto> updateTheme(@PathVariable("id") final Long id,
             @RequestBody Theme theme) {
-        Optional<Theme> u = themeService.getTheme(id);
+        Optional<Theme> t = themeService.getTheme(id);
 
-        if (u.isPresent()) {
-            Theme currentTheme = u.get();
+        if (t.isPresent()) {
+            Theme currentTheme = t.get();
 
             String name = theme.getName();
             if (name != null) {
@@ -95,7 +91,7 @@ public class ThemeController {
     }
 
     @GetMapping("getUserSubscriptions") // get the subscriptions of the current user
-    public ResponseEntity<?> getUserSubscriptions(Principal principal) {
+    public ResponseEntity<?> getUserSubscriptions(final Principal principal) {
         Optional<User> optUser = userService.getUserByEmail(principal.getName());
 
         if (optUser.isEmpty()) {
@@ -107,7 +103,7 @@ public class ThemeController {
     }
 
     @GetMapping("updateSubscription/{themeId}") // subscribe or unsubscribe the current user
-    public ResponseEntity<?> updateSubscription(@PathVariable("themeId") final Long themeId, Principal principal) {
+    public ResponseEntity<?> updateSubscription(@PathVariable("themeId") final Long themeId, final Principal principal) {
         Optional<User> optUser = userService.getUserByEmail(principal.getName());
         Optional<Theme> optTheme = themeService.getTheme(themeId);
 

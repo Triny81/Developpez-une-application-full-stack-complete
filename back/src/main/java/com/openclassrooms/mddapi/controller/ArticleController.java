@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,18 +24,15 @@ import com.openclassrooms.mddapi.model.User;
 import com.openclassrooms.mddapi.service.ArticleService;
 import com.openclassrooms.mddapi.service.UserService;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/articles")
 public class ArticleController {
-
-    @Autowired
-    private ArticleService articleService;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private ModelMapper modelMapper;
+    private final ArticleService articleService;
+    private final UserService userService;
+    private final ModelMapper modelMapper;
 
     @GetMapping("{id}")
     public ResponseEntity<ArticleDto> getArticle(@PathVariable("id") final Long id) {
@@ -54,17 +50,20 @@ public class ArticleController {
     }
 
     @PostMapping()
-    public ResponseEntity<ArticleDto> createArticle(@RequestBody Article article) {
-        return ResponseEntity.ok(convertToDto(articleService.saveArticle(article)));
+    public ResponseEntity<ArticleDto> createArticle(@RequestBody final Article article, final Principal principal) {
+        User user = userService.getUserByEmail(principal.getName()).get();
+        return ResponseEntity.ok(convertToDto(articleService.saveArticle(article, user)));
     }
 
     @PutMapping("{id}")
     public ResponseEntity<ArticleDto> updateArticle(@PathVariable("id") final Long id,
-            @RequestBody Article article) {
-        Optional<Article> u = articleService.getArticle(id);
+            @RequestBody Article article, final Principal principal) {
+        Optional<Article> a = articleService.getArticle(id);
 
-        if (u.isPresent()) {
-            Article currentArticle = u.get();
+        if (a.isPresent()) {
+            User user = userService.getUserByEmail(principal.getName()).get();
+
+            Article currentArticle = a.get();
 
             String title = article.getTitle();
             if (title != null) {
@@ -81,7 +80,7 @@ public class ArticleController {
                 currentArticle.setTheme(theme);
             }
 
-            articleService.saveArticle(currentArticle);
+            articleService.saveArticle(currentArticle, user);
 
             return ResponseEntity.ok(convertToDto(currentArticle));
         } else {
@@ -101,14 +100,8 @@ public class ArticleController {
     }
 
     @GetMapping("getUserSubscriptions") // get the articles of the subscriptions of the current user
-    public ResponseEntity<?> getUserSubscriptions(Principal principal) {
-        Optional<User> optUser = userService.getUserByEmail(principal.getName());
-
-        if (optUser.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        User user = optUser.get();
+    public ResponseEntity<?> getUserSubscriptions(final Principal principal) {
+        User user = userService.getUserByEmail(principal.getName()).get();
         return ResponseEntity.ok(convertIterableToDto(articleService.getArticlesByUserSubscriptions(user.getId())));
     }
 

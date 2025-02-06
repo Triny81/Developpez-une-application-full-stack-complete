@@ -8,7 +8,6 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletResponse;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -29,25 +28,19 @@ import com.openclassrooms.mddapi.payload.request.SignupRequest;
 import com.openclassrooms.mddapi.service.JWTService;
 import com.openclassrooms.mddapi.service.UserService;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/auth")
 public class AuthController {
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private ModelMapper modelMapper;
-
-    private JWTService jwtService;
+    private final UserService userService;
+    private final ModelMapper modelMapper;
+    private final JWTService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    public AuthController(JWTService jwtService, AuthenticationManager authenticationManager) {
-        this.jwtService = jwtService;
-        this.authenticationManager = authenticationManager;
-    }
-
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest login, HttpServletResponse response) {
+    public ResponseEntity<?> login(@RequestBody final LoginRequest login, HttpServletResponse response) {
         return authenticateUserAndSetCookie(login.getLogin(), login.getPassword(), response);
     }
 
@@ -66,7 +59,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody SignupRequest signup, HttpServletResponse response)
+    public ResponseEntity<?> register(@RequestBody final SignupRequest signup, HttpServletResponse response)
             throws Exception {
         String uncryptedPassword = signup.getPassword();
 
@@ -117,7 +110,7 @@ public class AuthController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<UserDto> getCurrentUser(Principal principal) {
+    public ResponseEntity<UserDto> getCurrentUser(final Principal principal) {
         Optional<User> optUser = userService.getUserByEmail(principal.getName());
 
         if (optUser.isPresent()) {
